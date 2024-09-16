@@ -1,4 +1,28 @@
 #!/bin/sh
+# Install zoxide
+if ! command -v zoxide &> /dev/null; then
+    curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+fi
+
+# Install eza (modern ls replacement)
+if ! command -v eza &> /dev/null; then
+    curl -LO https://github.com/eza-community/eza/releases/latest/download/eza-x86_64-unknown-linux-musl.tar.gz
+    tar -xvzf eza-x86_64-unknown-linux-musl.tar.gz
+    sudo mv eza /usr/local/bin
+    rm eza-x86_64-unknown-linux-musl.tar.gz
+fi
+
+# Install bat (enhanced cat)
+if ! command -v bat &> /dev/null; then
+    sudo apt-get install -y bat
+fi
+
+# Install fzf (fuzzy finder)
+if ! command -v fzf &> /dev/null; then
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+    ~/.fzf/install --all
+fi.fzf/install --all
+fi
 
 # -e: exit on error
 # -u: exit on unset variables
