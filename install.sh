@@ -21,12 +21,6 @@ if ! chezmoi="$(command -v chezmoi)"; then
     install_chezmoi
 fi
 
-script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
-set -- init --apply --source="${script_dir}"
-
-echo "Running 'chezmoi $*'" >&2
-exec "$chezmoi" "$@"
-
 install_mac_packages() {
     echo "Detected macOS. Installing Homebrew and packages..."
     if ! command -v brew &>/dev/null; then
@@ -49,3 +43,9 @@ if [ "$(uname)" = "Darwin" ]; then
 else
     install_linux_packages
 fi
+
+script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
+set -- init --apply --source="${script_dir}"
+
+echo "Running 'chezmoi $*'" >&2
+exec "$chezmoi" "$@"
