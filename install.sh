@@ -29,27 +29,6 @@ install_mac_packages() {
     brew bundle --file=.Brewfile
 }
 
-install_linux_packages() {
-    # Find and execute all .sh scripts
-    echo "Searching for .sh scripts..."
-    for script in $(find ~/dotfiles/dot_config/devcontainer/zsh-plugins-script -type f -name "*.sh"); do
-        echo "Found script: $script"
-
-        # Check if the file is readable and executable
-        if [ -f "$script" ]; then
-            sudo chmod +x "$script"
-            echo "Executing $script..."
-            y | sudo bash "$script"
-        else
-            echo "Script $script not found or not a file."
-        fi
-    done	
-    echo "Detected Linux. Installing packages with apt-get..."
-    sudo apt-get update && \
-    sudo apt-get install -y gpg bat && \
-    sudo ln -s /usr/bin/batcat /usr/bin/bat
-}
-
 if [ "$(uname)" = "Darwin" ]; then
     install_mac_packages
 else
