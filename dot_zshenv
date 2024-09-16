@@ -1,0 +1,7 @@
+# Set locale
+export LANG=en_US.UTF-8
+
+# Add Flutter to PATH if the directory exists
+if [ -d "$HOME/flutter/bin" ]; then
+    export PATH="$PATH:$HOME/flutter/bin"
+fi

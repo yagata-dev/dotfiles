@@ -1,0 +1,106 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# ============================
+# zinit & plugins settings
+# ============================
+
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+
+# Download Zinit, if it's not there yet
+if [ ! -d "$ZINIT_HOME" ]; then
+   mkdir -p "$(dirname $ZINIT_HOME)"
+   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
+
+# Source/Load zinit
+source "${ZINIT_HOME}/zinit.zsh"
+
+# Add in Powerlevel10k
+zinit ice depth=1; zinit light romkatv/powerlevel10k
+
+# Add in zsh plugins
+zinit ice wait lucid; zinit light zsh-users/zsh-autosuggestions
+zinit ice wait lucid; zinit light zdharma-continuum/fast-syntax-highlighting
+zinit ice wait lucid; zinit light zsh-users/zsh-completions
+zinit ice wait lucid; zinit light Aloxaf/fzf-tab
+
+# Add in snippets
+zinit snippet OMZP::git
+
+# ============================
+# Powerlevel10k run
+# ============================
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# ============================
+# Key Bindings
+# ============================
+
+# Bind arrow keys for history search
+bindkey '^[[A' history-search-backward
+bindkey '^[[B' history-search-forward
+
+# ============================
+# History Settings
+# ============================
+
+HISTSIZE=5000
+HISTFILE=~/.zsh_history
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
+
+# ============================
+# Completion Settings
+# ============================
+
+# Autoload and initialize completion system
+autoload -Uz compinit
+compinit -C
+
+# Configure completion matching to be case-insensitive
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+
+# ============================
+# Aliases
+# ============================
+
+# Clear screen and scrollback buffer
+alias clear='clear && printf "\033[3J"'
+
+# Enhanced 'ls' commands using 'eza'
+alias ei="eza --icons --git"
+alias ea="eza -a --icons --git"
+alias ee="eza -aahl --icons --git"
+alias et="eza -T -L 3 -a -I 'node_modules|.git|.cache' --icons"
+alias eta="eza -T -a -I 'node_modules|.git|.cache' --color=always --icons | less -r"
+alias ls="eza --icons --git"
+alias la="eza -a --icons --git"
+alias ll="eza -aahl --icons --git"
+alias lt="eza -T -L 3 -a -I 'node_modules|.git|.cache' --icons"
+alias lta="eta"
+alias l="clear && ls"
+
+# Git alias with specific locale
+alias git='LANG=en_GB git'
+
+# ============================
+# Shell integrations
+# ============================
+
+eval "$(fzf --zsh)"
+eval "$(zoxide init --cmd cd zsh)"
+
