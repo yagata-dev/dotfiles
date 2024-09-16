@@ -36,7 +36,7 @@ install_linux_packages() {
     # sudo ln -s /usr/bin/batcat /usr/bin/bat
     # Find and execute all .sh scripts
     echo "Searching for .sh scripts..."
-    find /dot_config/devcontainer -type f -name "*.sh" | while read -r script; do
+    find ~/dotfiles/dot_config/devcontainer -type f -name "*.sh" | while read -r script; do
         echo "Found script: $script"
 
         # Check if the file is readable and executable
