@@ -31,11 +31,11 @@ install_mac_packages() {
 
 install_linux_packages() {
     echo "Detected Linux. Installing packages with apt-get..."
-    apt-get update && \
-    apt-get install -y gpg bat && \
-    ln -s /usr/bin/batcat /usr/bin/bat
-    chmod a+x /dot_config/devcontainer/**.sh
-    sh ./dot_config/devcontainer/**.sh
+    sudo apt-get update && \
+    sudo apt-get install -y gpg bat && \
+    sudo ln -s /usr/bin/batcat /usr/bin/bat
+    sudo chmod a+x /dot_config/devcontainer/*.sh
+    sudo sh ./dot_config/devcontainer/*.sh
 }
 
 if [ "$(uname)" = "Darwin" ]; then
