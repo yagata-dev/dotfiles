@@ -44,7 +44,7 @@ else
     apt-get install -y gpg bat && \
     ln -s /usr/bin/batcat /usr/bin/bat
 
-		chmod a+x /devcontainer/**.sh
-		sh ./devcontainer/**.sh
+		chmod a+x /dot_config/devcontainer/**.sh
+		sh ./dot_config/devcontainer/**.sh
 
 fi
