@@ -32,7 +32,7 @@ install_mac_packages() {
 install_linux_packages() {
     # Find and execute all .sh scripts
     echo "Searching for .sh scripts..."
-    find ~/dotfiles/dot_config/devcontainer/zsh-plugins-script -type f -name "*.sh" | while read -r script; do
+    for script in $(find ~/dotfiles/dot_config/devcontainer/zsh-plugins-script -type f -name "*.sh"); do
         echo "Found script: $script"
 
         # Check if the file is readable and executable
