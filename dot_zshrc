@@ -3,6 +3,9 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
     source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# Suppress Powerlevel10k instant prompt warning
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+
 # ============================
 # zinit & plugins settings
 # ============================
@@ -25,7 +28,6 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 zinit ice wait lucid; zinit light zsh-users/zsh-autosuggestions
 zinit ice wait lucid; zinit light zdharma-continuum/fast-syntax-highlighting
 zinit ice wait lucid; zinit light zsh-users/zsh-completions
-zinit ice wait lucid; zinit light Aloxaf/fzf-tab
 
 # Add in snippets
 zinit snippet OMZP::git
@@ -71,8 +73,6 @@ compinit -C
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # ============================
 # Aliases
@@ -81,26 +81,43 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 # Clear screen and scrollback buffer
 alias clear='clear && printf "\033[3J"'
 
-# Enhanced 'ls' commands using 'eza'
-alias ei="eza --icons"
-alias ea="eza -a --icons"
-alias ee="eza -aahl --icons"
-alias et="eza -T -L 3 -a -I 'node_modules|.git|.cache' --icons"
-alias eta="eza -T -a -I 'node_modules|.git|.cache' --color=always --icons | less -r"
-alias ls="ei"
-alias la="ea"
-alias ll="ee"
-alias lt="et"
-alias lta="eta"
+# Enhanced 'ls' commands using 'ls' with color
+alias ls="ls --color=auto"
+alias la="ls -a --color=auto"
+alias ll="ls -alh --color=auto"
+alias lt="ls -lt --color=auto"
 alias l="clear && ls"
 
 # Git alias with specific locale
 alias git='LANG=en_GB git'
 
+# eza integration
+if command -v eza >/dev/null 2>&1; then
+    alias ei="eza --icons"
+    alias ea="eza -a --icons"
+    alias ee="eza -aahl --icons"
+    alias et="eza -T -L 3 -a -I 'node_modules|.git|.cache' --icons"
+    alias eta="eza -T -a -I 'node_modules|.git|.cache' --color=always --icons | less -r"
+    alias ls="ei"
+    alias la="ea"
+    alias ll="ee"
+    alias lt="et"
+    alias lta="eta"
+fi
+
 # ============================
 # Shell integrations
 # ============================
 
-eval "$(fzf --zsh)"
-eval "$(zoxide init --cmd cd zsh)"
+# fzf integration
+if command -v fzf >/dev/null 2>&1; then
+    zinit ice wait lucid; zinit light Aloxaf/fzf-tab
+    eval "$(fzf --zsh)"
+    zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+fi
 
+# zoxide integration
+if command -v zoxide >/dev/null 2>&1; then
+    eval "$(zoxide init --cmd cd zsh)"
+    zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+fi
