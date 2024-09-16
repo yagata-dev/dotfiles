@@ -39,7 +39,7 @@ install_linux_packages() {
         if [ -f "$script" ]; then
             sudo chmod +x "$script"
             echo "Executing $script..."
-            sudo bash "$script"
+            y | sudo bash "$script"
         else
             echo "Script $script not found or not a file."
         fi
