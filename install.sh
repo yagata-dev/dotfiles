@@ -31,9 +31,9 @@ install_mac_packages() {
 
 install_linux_packages() {
     echo "Detected Linux. Installing packages with apt-get..."
-    # sudo apt-get update && \
-    # sudo apt-get install -y gpg bat && \
-    # sudo ln -s /usr/bin/batcat /usr/bin/bat
+    sudo apt-get update && \
+    sudo apt-get install -y gpg bat && \
+    sudo ln -s /usr/bin/batcat /usr/bin/bat
     # Find and execute all .sh scripts
     echo "Searching for .sh scripts..."
     find ~/dotfiles/dot_config/devcontainer -type f -name "*.sh" | while read -r script; do
