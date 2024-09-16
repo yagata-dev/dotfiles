@@ -31,8 +31,6 @@ install_mac_packages() {
 
 if [ "$(uname)" = "Darwin" ]; then
     install_mac_packages
-else
-    install_linux_packages
 fi
 
 script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
