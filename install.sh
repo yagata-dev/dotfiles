@@ -34,10 +34,19 @@ install_linux_packages() {
     sudo apt-get update && \
     sudo apt-get install -y gpg bat && \
     sudo ln -s /usr/bin/batcat /usr/bin/bat
-    # Use find to locate all .sh scripts and execute them
+    # Find and execute all .sh scripts
+    echo "Searching for .sh scripts..."
     find /dot_config/devcontainer -type f -name "*.sh" | while read -r script; do
-        sudo chmod a+x "$script"
-        sudo sh "$script"
+        echo "Found script: $script"
+
+        # Check if the file is readable and executable
+        if [ -f "$script" ]; then
+            sudo chmod +x "$script"
+            echo "Executing $script..."
+            sudo bash "$script"
+        else
+            echo "Script $script not found or not a file."
+        fi
     done
 }
 
