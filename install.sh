@@ -34,12 +34,10 @@ install_linux_packages() {
     sudo apt-get update && \
     sudo apt-get install -y gpg bat && \
     sudo ln -s /usr/bin/batcat /usr/bin/bat
-    # Loop through and execute each shell script in the devcontainer directory
-    for script in /dot_config/devcontainer/**/*.sh; do
-        if [ -f "$script" ]; then
-            sudo chmod a+x "$script"
-            sudo sh "$script"
-        fi
+    # Use find to locate all .sh scripts and execute them
+    find /dot_config/devcontainer -type f -name "*.sh" | while read -r script; do
+        sudo chmod a+x "$script"
+        sudo sh "$script"
     done
 }
 
