@@ -34,8 +34,13 @@ install_linux_packages() {
     sudo apt-get update && \
     sudo apt-get install -y gpg bat && \
     sudo ln -s /usr/bin/batcat /usr/bin/bat
-    sudo chmod a+x /dot_config/devcontainer/*.sh
-    sudo sh ./dot_config/devcontainer/*.sh
+    # Loop through and execute each shell script in the devcontainer directory
+    for script in /dot_config/devcontainer/*.sh; then
+        if [ -f "$script" ]; then
+            sudo chmod a+x "$script"
+            sudo sh "$script"
+        fi
+    done
 }
 
 if [ "$(uname)" = "Darwin" ]; then
