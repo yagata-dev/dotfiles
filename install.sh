@@ -28,3 +28,23 @@ set -- init --apply --source="${script_dir}"
 echo "Running 'chezmoi $*'" >&2
 # exec: replace current process with chezmoi
 exec "$chezmoi" "$@"
+
+# Check the operating system
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS detected
+    echo "Detected macOS. Installing Homebrew and packages..."
+    if ! command -v brew &>/dev/null; then
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+    brew bundle --file=.Brewfile
+else
+    # Assume Linux
+    echo "Detected Linux. Installing packages with apt-get..."
+    apt-get update && \
+    apt-get install -y gpg bat && \
+    ln -s /usr/bin/batcat /usr/bin/bat
+
+		chmod a+x /devcontainer/**.sh
+		sh ./devcontainer/**.sh
+
+fi
