@@ -109,7 +109,7 @@ fi
 # fzf integration
 if command -v fzf >/dev/null 2>&1; then
     zinit ice wait lucid; zinit light Aloxaf/fzf-tab
-    source <(fzf --zsh)
+    # source <(fzf --zsh)
     zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 fi
 
