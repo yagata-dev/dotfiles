@@ -1,11 +1,14 @@
 # Set locale
 export LANG=en_US.UTF-8
 
+# Add Java to PATH if the directory exists
+if [ -d "/usr/libexec/java_home" ]; then
+    export JAVA_HOME=$(/usr/libexec/java_home)
+fi
+
 # Add Flutter to PATH if the directory exists
 if [ -d "$HOME/flutter/bin" ]; then
     export PATH="$PATH:$HOME/flutter/bin"
 fi
 
 export PATH="/opt/homebrew/opt/node@22/bin:$PATH"
-
-export JAVA_HOME=$(/usr/libexec/java_home)
