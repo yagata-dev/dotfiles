@@ -29,9 +29,53 @@ install_mac_packages() {
     brew bundle --file=.Brewfile
 }
 
+install_tools() {
+    echo "Installing additional tools..."
+
+    # Install eza
+    if ! command -v eza >/dev/null 2>&1; then
+        echo "Installing eza..."
+        if command -v brew >/dev/null 2>&1; then
+            brew install eza
+        elif command -v apt >/dev/null 2>&1; then
+            sudo apt update && sudo apt install -y eza
+        else
+            echo "Could not install eza. Please install it manually."
+        fi
+    fi
+
+    # Install fzf
+    if ! command -v fzf >/dev/null 2>&1; then
+        echo "Installing fzf..."
+        if command -v brew >/dev/null 2>&1; then
+            brew install fzf
+            $(brew --prefix)/opt/fzf/install --key-bindings --completion --no-bash --no-fish
+        elif command -v apt >/dev/null 2>&1; then
+            sudo apt update && sudo apt install -y fzf
+        else
+            git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+            ~/.fzf/install --key-bindings --completion --no-bash --no-fish
+        fi
+    fi
+
+    # Install zoxide
+    if ! command -v zoxide >/dev/null 2>&1; then
+        echo "Installing zoxide..."
+        if command -v brew >/dev/null 2>&1; then
+            brew install zoxide
+        elif command -v apt >/dev/null 2>&1; then
+            sudo apt update && sudo apt install -y zoxide
+        else
+            curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+        fi
+    fi
+}
+
 if [ "$(uname)" = "Darwin" ]; then
     install_mac_packages
 fi
+
+install_tools
 
 script_dir="$(cd -P -- "$(dirname -- "$(command -v -- "$0")")" && pwd -P)"
 set -- init --apply --source="${script_dir}"
