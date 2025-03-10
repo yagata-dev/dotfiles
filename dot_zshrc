@@ -6,9 +6,7 @@ fi
 # ============================
 # zinit & plugins settings
 # ============================
-
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-
 # Download Zinit, if it's not there yet
 if [ ! -d "$ZINIT_HOME" ]; then
    mkdir -p "$(dirname $ZINIT_HOME)" >/dev/null 2>&1
@@ -18,13 +16,37 @@ fi
 # Source/Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
+# ============================
+# Completion Settings (before compinit)
+# ============================
+# Configure completion matching to be case-insensitive
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu no
+
+# ============================
+# Autoload and initialize completion system
+# ============================
+autoload -Uz compinit
+compinit -C
+
+# ============================
+# Load plugins (after compinit)
+# ============================
+# Powerlevel10k theme
 zinit ice depth=1; zinit light romkatv/powerlevel10k
 
-# Add in zsh plugins
+# fzf-tab (load after compinit, before other widget-wrapping plugins)
+if command -v fzf >/dev/null 2>&1; then
+    zinit ice wait lucid; zinit light Aloxaf/fzf-tab
+    zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+    zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+fi
+
+# Other plugins (after fzf-tab)
 zinit ice wait lucid; zinit light zsh-users/zsh-autosuggestions
 zinit ice wait lucid; zinit light zdharma-continuum/fast-syntax-highlighting
 zinit ice wait lucid; zinit light zsh-users/zsh-completions
-zinit ice wait lucid; zinit light Aloxaf/fzf-tab
 
 # Add in snippets
 zinit snippet OMZP::git
@@ -37,7 +59,6 @@ zinit snippet OMZP::git
 # ============================
 # Key Bindings
 # ============================
-
 # Bind arrow keys for history search
 bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
@@ -45,7 +66,6 @@ bindkey '^[[B' history-search-forward
 # ============================
 # History Settings
 # ============================
-
 HISTSIZE=5000
 HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
@@ -59,34 +79,30 @@ setopt hist_ignore_dups
 setopt hist_find_no_dups
 
 # ============================
-# Completion Settings
-# ============================
-
-# Autoload and initialize completion system
-autoload -Uz compinit
-compinit -C
-
-# Configure completion matching to be case-insensitive
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-zstyle ':completion:*' menu no
-
-# ============================
 # Aliases
 # ============================
-
 # Clear screen and scrollback buffer
 alias clear='clear && printf "\033[3J"'
-
 # Enhanced 'ls' commands using 'ls' with color
 alias ls="ls --color=auto"
 alias la="ls -a --color=auto"
 alias ll="ls -alh --color=auto"
 alias lt="ls -lt --color=auto"
 alias l="clear && ls"
-
 # Git alias with specific locale
 alias git='LANG=en_GB git'
+
+# ============================
+# Shell integrations
+# ============================
+# Check for fzf installation
+if ! command -v fzf >/dev/null 2>&1; then
+    echo "fzf is not installed. Consider installing it with your package manager."
+    # Uncomment one of these lines based on your system to auto-install:
+    # sudo apt install fzf    # Debian/Ubuntu
+    # brew install fzf        # macOS with Homebrew
+    # sudo pacman -S fzf      # Arch Linux
+fi
 
 # eza integration
 if command -v eza >/dev/null 2>&1; then
@@ -102,19 +118,7 @@ if command -v eza >/dev/null 2>&1; then
     alias lta="eta"
 fi
 
-# ============================
-# Shell integrations
-# ============================
-
-# fzf integration
-if command -v fzf >/dev/null 2>&1; then
-    zinit ice wait lucid; zinit light Aloxaf/fzf-tab
-    # source <(fzf --zsh)
-    zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-fi
-
 # zoxide integration
 if command -v zoxide >/dev/null 2>&1; then
     eval "$(zoxide init --cmd cd zsh)"
-    zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 fi
